@@ -39,3 +39,12 @@ gradlePlugin {
         }
     }
 }
+
+gradlePlugin {
+    plugins {
+        register("androidComposeApplication") {
+            id = "com.cso.convention.android.application.compose"
+            implementationClass = "AndroidApplicationComposeConventionPlugin"
+        }
+    }
+}
