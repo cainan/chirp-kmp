@@ -48,3 +48,12 @@ gradlePlugin {
         }
     }
 }
+
+gradlePlugin {
+    plugins {
+        register("cmpApplication") {
+            id = "com.cso.convention.cmp.application"
+            implementationClass = "CmpApplicationConventionPlugin"
+        }
+    }
+}
