@@ -38,22 +38,25 @@ gradlePlugin {
             implementationClass = "AndroidApplicationConventionPlugin"
         }
     }
-}
 
-gradlePlugin {
     plugins {
         register("androidComposeApplication") {
             id = "com.cso.convention.android.application.compose"
             implementationClass = "AndroidApplicationComposeConventionPlugin"
         }
     }
-}
 
-gradlePlugin {
     plugins {
         register("cmpApplication") {
             id = "com.cso.convention.cmp.application"
             implementationClass = "CmpApplicationConventionPlugin"
+        }
+    }
+
+    plugins {
+        register("kmpLibrary") {
+            id = "com.cso.convention.kmp.library"
+            implementationClass = "KmpLibraryConventionPlugin"
         }
     }
 }
