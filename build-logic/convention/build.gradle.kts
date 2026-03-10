@@ -37,26 +37,30 @@ gradlePlugin {
             id = "com.cso.convention.android.application"
             implementationClass = "AndroidApplicationConventionPlugin"
         }
-    }
 
-    plugins {
         register("androidComposeApplication") {
             id = "com.cso.convention.android.application.compose"
             implementationClass = "AndroidApplicationComposeConventionPlugin"
         }
-    }
 
-    plugins {
         register("cmpApplication") {
             id = "com.cso.convention.cmp.application"
             implementationClass = "CmpApplicationConventionPlugin"
         }
-    }
 
-    plugins {
         register("kmpLibrary") {
             id = "com.cso.convention.kmp.library"
             implementationClass = "KmpLibraryConventionPlugin"
+        }
+
+        register("cmpLibrary") {
+            id = "com.cso.convention.cmp.library"
+            implementationClass = "CmpLibraryConventionPlugin"
+        }
+
+        register("cmpFeature") {
+            id = "com.cso.convention.cmp.feature"
+            implementationClass = "CmpFeatureConventionPlugin"
         }
     }
 }
