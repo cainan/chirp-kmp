@@ -11,7 +11,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.BlendMode.Companion.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.cso.core.designsystem.components.brand.ChirpSuccessIcon
@@ -28,6 +27,7 @@ fun ChirpSimpleSuccessLayout(
     icon: @Composable () -> Unit,
     primaryButton: @Composable () -> Unit,
     secondaryButton: @Composable (() -> Unit)? = null,
+    secondaryError: String? = null,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -62,6 +62,17 @@ fun ChirpSimpleSuccessLayout(
             if (secondaryButton != null) {
                 Spacer(modifier = Modifier.height(8.dp))
                 secondaryButton()
+                if (secondaryError != null) {
+                    Spacer(modifier = Modifier.height(6.dp))
+                    Text(
+                        text = secondaryError,
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center,
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
+
             }
 
             Spacer(modifier = Modifier.height(8.dp))

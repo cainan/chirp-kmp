@@ -1,5 +1,6 @@
 package com.cso.core.data.auth
 
+import com.cso.core.data.dto.requests.EmailRequest
 import com.cso.core.data.dto.requests.RegisterRequest
 import com.cso.core.data.networking.post
 import com.cso.core.domain.auth.AuthService
@@ -11,6 +12,7 @@ import io.ktor.client.HttpClient
 class KtorAuthService(
     private val httpClient: HttpClient
 ) : AuthService {
+
     override suspend fun register(
         email: String,
         username: String,
@@ -23,6 +25,15 @@ class KtorAuthService(
                 username = username,
                 password = password
             )
+        )
+    }
+
+    override suspend fun resendVerificationEmail(
+        email: String
+    ): EmptyResult<DataError.Remote> {
+        return httpClient.post(
+            route = "/auth/resend-verification",
+            body = EmailRequest(email = email)
         )
     }
 }
