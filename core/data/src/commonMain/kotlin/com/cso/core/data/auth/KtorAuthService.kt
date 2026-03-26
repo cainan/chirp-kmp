@@ -2,6 +2,7 @@ package com.cso.core.data.auth
 
 import com.cso.core.data.dto.requests.EmailRequest
 import com.cso.core.data.dto.requests.RegisterRequest
+import com.cso.core.data.networking.get
 import com.cso.core.data.networking.post
 import com.cso.core.domain.auth.AuthService
 import com.cso.core.domain.util.DataError
@@ -36,4 +37,12 @@ class KtorAuthService(
             body = EmailRequest(email = email)
         )
     }
+
+    override suspend fun verifyEmail(token: String): EmptyResult<DataError.Remote> {
+        return httpClient.get(
+            route = "/auth/verify",
+            queryParams = mapOf("token" to token)
+        )
+    }
+
 }
