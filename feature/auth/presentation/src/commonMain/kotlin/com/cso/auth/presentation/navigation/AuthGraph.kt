@@ -3,7 +3,9 @@ package com.cso.auth.presentation.navigation
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import androidx.navigation.navDeepLink
 import androidx.navigation.navigation
+import com.cso.auth.presentation.email_verification.EmailVerificationRoot
 import com.cso.auth.presentation.register.RegisterRoot
 import com.cso.auth.presentation.register_success.RegisterSuccessRoot
 
@@ -24,6 +26,21 @@ fun NavGraphBuilder.authGraph(
 
         composable<AuthGraphRoutes.RegisterSuccess> {
             RegisterSuccessRoot()
+        }
+
+        composable<AuthGraphRoutes.EmailVerification>(
+            deepLinks = listOf(
+                navDeepLink {
+                    this.uriPattern = "https://chirp.pl-coding.com/api/auth/verify?token={token}"
+                },
+                navDeepLink {
+                    this.uriPattern = "chirp://chirp.pl-coding.com/api/auth/verify?token={token}"
+                }
+
+            )
+        )
+        {
+            EmailVerificationRoot()
         }
     }
 }
