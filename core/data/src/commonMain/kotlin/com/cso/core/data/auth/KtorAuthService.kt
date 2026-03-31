@@ -1,18 +1,39 @@
 package com.cso.core.data.auth
 
+import com.cso.core.data.dto.AuthInfoSerializable
 import com.cso.core.data.dto.requests.EmailRequest
+import com.cso.core.data.dto.requests.LoginRequest
 import com.cso.core.data.dto.requests.RegisterRequest
+import com.cso.core.data.mappers.toDomain
 import com.cso.core.data.networking.get
 import com.cso.core.data.networking.post
+import com.cso.core.domain.auth.AuthInfo
 import com.cso.core.domain.auth.AuthService
 import com.cso.core.domain.util.DataError
 import com.cso.core.domain.util.EmptyResult
+import com.cso.core.domain.util.Result
+import com.cso.core.domain.util.map
 import io.ktor.client.HttpClient
 
 
 class KtorAuthService(
     private val httpClient: HttpClient
 ) : AuthService {
+
+    override suspend fun login(
+        email: String,
+        password: String
+    ): Result<AuthInfo, DataError.Remote> {
+        return httpClient.post<LoginRequest, AuthInfoSerializable>(
+            route = "/auth/login",
+            body = LoginRequest(
+                email = email,
+                password = password
+            )
+        ).map {
+            it.toDomain()
+        }
+    }
 
     override suspend fun register(
         email: String,

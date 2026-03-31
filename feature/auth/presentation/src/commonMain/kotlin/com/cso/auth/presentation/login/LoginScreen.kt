@@ -29,6 +29,7 @@ import com.cso.core.designsystem.components.layouts.ChirpAdaptiveFormLayout
 import com.cso.core.designsystem.components.textfields.ChirpPasswordTextField
 import com.cso.core.designsystem.components.textfields.ChirpTextField
 import com.cso.core.designsystem.theme.ChirpTheme
+import com.cso.core.presentation.util.ObserveAsEvents
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
@@ -41,6 +42,12 @@ fun LoginRoot(
     onCreateAccountClick: () -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+
+    ObserveAsEvents(viewModel.events) { event ->
+        when(event) {
+            LoginEvent.Success -> onLoginSuccess()
+        }
+    }
 
     LoginScreen(
         state = state,
