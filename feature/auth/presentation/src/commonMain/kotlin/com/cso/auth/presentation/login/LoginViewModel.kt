@@ -8,6 +8,8 @@ import chirp.feature.auth.presentation.generated.resources.error_email_not_verif
 import chirp.feature.auth.presentation.generated.resources.error_invalid_credentials
 import com.cso.auth.domain.EmailValidator
 import com.cso.core.domain.auth.AuthService
+import com.cso.core.domain.auth.SessionStorage
+import com.cso.core.domain.logging.ChirpLogger
 import com.cso.core.domain.util.DataError
 import com.cso.core.domain.util.onFailure
 import com.cso.core.domain.util.onSuccess
@@ -27,7 +29,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class LoginViewModel(
-    private val authService: AuthService
+    private val authService: AuthService,
+    private val sessionStorage: SessionStorage
 ) : ViewModel() {
 
     private var hasLoadedInitialData = false
@@ -39,9 +42,10 @@ class LoginViewModel(
         .map { email -> EmailValidator.validate(email) }
         .distinctUntilChanged()
 
-    private val isPasswordNotBlankFlow = snapshotFlow { state.value.passwordTextFieldState.text.toString() }
-        .map { it.isNotBlank() }
-        .distinctUntilChanged()
+    private val isPasswordNotBlankFlow =
+        snapshotFlow { state.value.passwordTextFieldState.text.toString() }
+            .map { it.isNotBlank() }
+            .distinctUntilChanged()
 
     private val _state = MutableStateFlow(LoginState())
     val state = _state
@@ -67,9 +71,11 @@ class LoginViewModel(
             isPasswordNotBlankFlow,
             isRegisteringFlow
         ) { isEmailValid, isPasswordNotBlank, isRegistering ->
-            _state.update { it.copy(
-                canLogin = !isRegistering && isEmailValid && isPasswordNotBlank
-            ) }
+            _state.update {
+                it.copy(
+                    canLogin = !isRegistering && isEmailValid && isPasswordNotBlank
+                )
+            }
         }.launchIn(viewModelScope)
     }
 
@@ -110,7 +116,9 @@ class LoginViewModel(
                 .login(
                     email = email,
                     password = password
-                ).onSuccess {
+                ).onSuccess { authInfo ->
+                    sessionStorage.set(authInfo)
+
                     _state.update {
                         it.copy(
                             isLoggingIn = false
