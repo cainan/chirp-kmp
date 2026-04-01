@@ -35,6 +35,8 @@ kotlin {
 
             implementation(libs.jetbrains.compose.navigation)
 
+            implementation(libs.bundles.koin.common)
+
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)
