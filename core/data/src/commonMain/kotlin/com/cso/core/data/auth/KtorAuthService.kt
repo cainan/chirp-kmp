@@ -4,6 +4,7 @@ import com.cso.core.data.dto.AuthInfoSerializable
 import com.cso.core.data.dto.requests.EmailRequest
 import com.cso.core.data.dto.requests.LoginRequest
 import com.cso.core.data.dto.requests.RegisterRequest
+import com.cso.core.data.dto.requests.ResetPasswordRequest
 import com.cso.core.data.mappers.toDomain
 import com.cso.core.data.networking.get
 import com.cso.core.data.networking.post
@@ -63,6 +64,26 @@ class KtorAuthService(
         return httpClient.get(
             route = "/auth/verify",
             queryParams = mapOf("token" to token)
+        )
+    }
+
+    override suspend fun forgotPassword(email: String): EmptyResult<DataError.Remote> {
+        return httpClient.post(
+            route = "/auth/forgot-password",
+            body = EmailRequest(email = email)
+        )
+    }
+
+    override suspend fun resetPassword(
+        newPassword: String,
+        token: String
+    ): EmptyResult<DataError.Remote> {
+        return httpClient.post(
+            route = "/auth/reset-password",
+            body = ResetPasswordRequest(
+                newPassword = newPassword,
+                token = token
+            )
         )
     }
 
