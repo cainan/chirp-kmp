@@ -6,7 +6,7 @@ import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
 import com.cso.auth.presentation.navigation.AuthGraphRoutes
-import com.cso.chat.presentation.chat_list.ChatListRoute
+import com.cso.chat.presentation.navigation.ChatGraphRoutes
 import com.cso.chirp.navigation.DeepLinkListener
 import com.cso.chirp.navigation.NavigationRoot
 import com.cso.core.designsystem.theme.ChirpTheme
@@ -48,7 +48,7 @@ fun App(
             NavigationRoot(
                 navController = navController,
                 startDestination = if (state.isLoggedIn) {
-                    ChatListRoute
+                    ChatGraphRoutes.Graph
                 } else {
                     AuthGraphRoutes.Graph
                 }
