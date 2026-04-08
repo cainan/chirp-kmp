@@ -24,7 +24,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.cso.chat.presentation.create_chat.CreateChatRoot
 import com.cso.core.designsystem.theme.extended
+import com.cso.core.presentation.util.DialogSheetScopedViewModel
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -71,6 +73,8 @@ fun ChatListDetailAdaptiveLayout(
                                         )
                                     )
 
+                                    chatListDetailViewModel.onAction(ChatListDetailAction.OnCreateChatClick)
+
                                     scope.launch {
                                         scaffoldNavigator.navigateTo(
                                             ListDetailPaneScaffoldRole.Detail
@@ -100,4 +104,10 @@ fun ChatListDetailAdaptiveLayout(
             }
         }
     )
+
+    DialogSheetScopedViewModel(
+        visible = sharedState.dialogState is DialogState.CreateChat,
+    ) {
+        CreateChatRoot()
+    }
 }
