@@ -21,6 +21,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import chirp.feature.chat.presentation.generated.resources.Res
 import chirp.feature.chat.presentation.generated.resources.cancel
 import chirp.feature.chat.presentation.generated.resources.create_chat
+import com.cso.chat.domain.model.Chat
 import com.cso.chat.presentation.components.ChatParticipantSearchTextSection
 import com.cso.chat.presentation.components.ChatParticipantsSelectionSection
 import com.cso.chat.presentation.components.ManageChatButtonSection
@@ -31,6 +32,7 @@ import com.cso.core.designsystem.components.buttons.ChirpButtonStyle
 import com.cso.core.designsystem.components.dialogs.ChirpAdaptiveDialogSheetLayout
 import com.cso.core.designsystem.theme.ChirpTheme
 import com.cso.core.presentation.util.DeviceConfiguration
+import com.cso.core.presentation.util.ObserveAsEvents
 import com.cso.core.presentation.util.clearFocusOnTap
 import com.cso.core.presentation.util.currentDeviceConfiguration
 import org.jetbrains.compose.resources.stringResource
@@ -40,9 +42,16 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun CreateChatRoot(
     onDismiss: () -> Unit,
+    onChatCreated: (Chat) -> Unit,
     viewModel: CreateChatViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+
+    ObserveAsEvents(viewModel.events) { event ->
+        when(event) {
+            is CreateChatEvent.OnChatCreated -> onChatCreated(event.chat)
+        }
+    }
 
     ChirpAdaptiveDialogSheetLayout(
         onDismiss = onDismiss
