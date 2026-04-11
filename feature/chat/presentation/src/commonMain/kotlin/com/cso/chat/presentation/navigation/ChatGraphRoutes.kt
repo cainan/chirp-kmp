@@ -22,7 +22,11 @@ fun NavGraphBuilder.chatGraph(navController: NavController) {
     ) {
 
         composable<ChatGraphRoutes.ChatListDetailRoute> {
-            ChatListDetailAdaptiveLayout()
+            ChatListDetailAdaptiveLayout(
+                onLogout = {
+                    // TODO: Logout User
+                }
+            )
         }
 
     }

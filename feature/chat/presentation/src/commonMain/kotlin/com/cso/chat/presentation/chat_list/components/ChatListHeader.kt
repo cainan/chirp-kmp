@@ -38,7 +38,7 @@ import chirp.core.designsystem.generated.resources.Res as DesignSystemRes
 
 @Composable
 fun ChatListHeader(
-    localParticipant: ChatParticipantUi,
+    localParticipant: ChatParticipantUi?,
     isUserMenuOpen: Boolean,
     onUserAvatarClick: () -> Unit,
     onDismissMenu: () -> Unit,
@@ -80,7 +80,7 @@ fun ChatListHeader(
 
 @Composable
 fun ProfileAvatarSection(
-    localParticipant: ChatParticipantUi,
+    localParticipant: ChatParticipantUi?,
     isMenuOpen: Boolean,
     onClick: () -> Unit,
     onDismissMenu: () -> Unit,
@@ -92,11 +92,14 @@ fun ProfileAvatarSection(
     Box(
         modifier = modifier
     ) {
-        ChirpAvatarPhoto(
-            displayText = localParticipant.initials,
-            imageUrl = localParticipant.imageUrl,
-            onClick = onClick
-        )
+
+        localParticipant?.let {
+            ChirpAvatarPhoto(
+                displayText = localParticipant.initials,
+                imageUrl = localParticipant.imageUrl,
+                onClick = onClick
+            )
+        }
 
         DropdownMenu(
             expanded = isMenuOpen,
