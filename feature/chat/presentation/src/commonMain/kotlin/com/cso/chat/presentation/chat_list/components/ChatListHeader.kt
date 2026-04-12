@@ -15,10 +15,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import chirp.core.designsystem.generated.resources.log_out_icon
 import chirp.core.designsystem.generated.resources.logo_chirp
-import chirp.core.designsystem.generated.resources.users_icon
 import chirp.feature.chat.presentation.generated.resources.Res
 import chirp.feature.chat.presentation.generated.resources.logout
 import chirp.feature.chat.presentation.generated.resources.profile_settings
+import chirp.feature.chat.presentation.generated.resources.users_icon
 import com.cso.chat.presentation.components.ChatHeader
 import com.cso.core.designsystem.components.avatar.ChatParticipantUi
 import com.cso.core.designsystem.components.avatar.ChirpAvatarPhoto
@@ -102,7 +102,7 @@ fun ProfileAvatarSection(
             items = listOf(
                 DropdownItem(
                     title = stringResource(Res.string.profile_settings),
-                    icon = vectorResource(DesignSystemRes.drawable.users_icon),
+                    icon = vectorResource(Res.drawable.users_icon),
                     contentColor = MaterialTheme.colorScheme.extended.textSecondary,
                     onClick = onProfileSettingsClick
                 ),
