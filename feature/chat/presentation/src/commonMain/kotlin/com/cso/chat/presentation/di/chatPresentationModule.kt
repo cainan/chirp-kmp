@@ -1,6 +1,7 @@
 package com.cso.chat.presentation.di
 
 
+import com.cso.chat.presentation.chat_detail.ChatDetailViewModel
 import com.cso.chat.presentation.chat_list.ChatListViewModel
 import com.cso.chat.presentation.chat_list_detail.ChatListDetailViewModel
 import com.cso.chat.presentation.create_chat.CreateChatViewModel
@@ -11,4 +12,5 @@ val chatPresentationModule = module {
     viewModelOf(::ChatListViewModel)
     viewModelOf(::ChatListDetailViewModel)
     viewModelOf(::CreateChatViewModel)
+    viewModelOf(::ChatDetailViewModel)
 }
