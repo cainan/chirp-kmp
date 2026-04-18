@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 class ChatListViewModel(
     private val repository: ChatRepository,
@@ -37,7 +38,7 @@ class ChatListViewModel(
     }
         .onStart {
             if (!hasLoadedInitialData) {
-                /** Load initial data here **/
+                loadChats()
                 hasLoadedInitialData = true
             }
         }
@@ -53,4 +54,9 @@ class ChatListViewModel(
         }
     }
 
+    private fun loadChats() {
+        viewModelScope.launch {
+            repository.fetchChats()
+        }
+    }
 }
