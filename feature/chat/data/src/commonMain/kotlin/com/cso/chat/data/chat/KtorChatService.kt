@@ -5,6 +5,7 @@ import com.cso.chat.data.dto.request.CreateChatRequest
 import com.cso.chat.data.mappers.toDomain
 import com.cso.chat.domain.chat.ChatService
 import com.cso.chat.domain.model.Chat
+import com.cso.core.data.networking.get
 import com.cso.core.data.networking.post
 import com.cso.core.domain.util.DataError
 import com.cso.core.domain.util.Result
@@ -22,5 +23,13 @@ class KtorChatService(
                 otherUserIds = otherUserIds
             )
         ).map { it.toDomain() }
+    }
+
+    override suspend fun getChats(): Result<List<Chat>, DataError.Remote> {
+        return httpClient.get<List<ChatDto>>(
+            route = "/chat"
+        ).map { chatDtos ->
+            chatDtos.map { it.toDomain() }
+        }
     }
 }

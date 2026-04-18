@@ -25,6 +25,7 @@ import chirp.feature.chat.presentation.generated.resources.leave_chat
 import chirp.feature.chat.presentation.generated.resources.open_chat_options_menu
 import chirp.feature.chat.presentation.generated.resources.users_icon
 import com.cso.chat.domain.model.ChatMessage
+import com.cso.chat.domain.model.ChatMessageDeliveryStatus
 import com.cso.chat.presentation.components.ChatHeader
 import com.cso.chat.presentation.components.ChatItemHeaderRow
 import com.cso.chat.presentation.model.ChatUi
@@ -160,7 +161,8 @@ fun ChatDetailHeaderPreview() {
                             content = "This is a last chat message that was sent by Philipp " +
                                     "and goes over multiple lines to showcase the ellipsis",
                             createdAt = Clock.System.now(),
-                            senderId = "1"
+                            senderId = "1",
+                            deliveryStatus = ChatMessageDeliveryStatus.SENT
                         ),
                         lastMessageSenderUsername = "Philipp"
                     ),

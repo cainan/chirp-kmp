@@ -1,0 +1,49 @@
+package com.cso.chat.data.chat
+
+import com.cso.chat.data.mappers.toDomain
+import com.cso.chat.data.mappers.toEntity
+import com.cso.chat.data.mappers.toLastMessageView
+import com.cso.chat.database.ChirpChatDatabase
+import com.cso.chat.database.entities.ChatWithParticipants
+import com.cso.chat.domain.chat.ChatRepository
+import com.cso.chat.domain.chat.ChatService
+import com.cso.chat.domain.model.Chat
+import com.cso.core.domain.util.DataError
+import com.cso.core.domain.util.Result
+import com.cso.core.domain.util.onSuccess
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+
+class OfflineFirstChatRepository(
+    private val chatService: ChatService,
+    private val db: ChirpChatDatabase
+) : ChatRepository {
+    override fun getChats(): Flow<List<Chat>> {
+        return db.chatDao.getChatsWithActiveParticipants()
+            .map { chatWithParticipantsList ->
+                chatWithParticipantsList.map { it.toDomain() }
+            }
+    }
+
+    override suspend fun fetchChats(): Result<List<Chat>, DataError.Remote> {
+        return chatService
+            .getChats()
+            .onSuccess { chats ->
+                val chatsWithParticipants = chats.map { chat ->
+                    ChatWithParticipants(
+                        chat = chat.toEntity(),
+                        participants = chat.participants.map { it.toEntity() },
+                        lastMessage = chat.lastMessage?.toLastMessageView()
+                    )
+                }
+
+                db.chatDao.upsertChatsWithParticipantsAndCrossRefs(
+                    chats = chatsWithParticipants,
+                    participantDao = db.chatParticipantDao,
+                    crossRefDao = db.chatParticipantsCrossRefDao,
+                    messageDao = db.chatMessageDao
+                )
+            }
+    }
+}
+
