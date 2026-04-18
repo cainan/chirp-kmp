@@ -63,6 +63,7 @@ fun ChatListDetailAdaptiveLayout(
             AnimatedPane {
                 ChatListRoot(
                     onChatClick = {
+                        println("---------onChatClick $it")
                         chatListDetailViewModel.onAction(ChatListDetailAction.OnChatClick(it.id))
                         scope.launch {
                             scaffoldNavigator.navigateTo(ListDetailPaneScaffoldRole.Detail)

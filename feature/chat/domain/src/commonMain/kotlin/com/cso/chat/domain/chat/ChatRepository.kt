@@ -1,11 +1,18 @@
 package com.cso.chat.domain.chat
 
 import com.cso.chat.domain.model.Chat
+import com.cso.chat.domain.model.ChatInfo
 import com.cso.core.domain.util.DataError
+import com.cso.core.domain.util.EmptyResult
 import com.cso.core.domain.util.Result
 import kotlinx.coroutines.flow.Flow
 
 interface ChatRepository {
     fun getChats(): Flow<List<Chat>>
+
+    fun getChatInfoById(chatId: String): Flow<ChatInfo>
+
     suspend fun fetchChats(): Result<List<Chat>, DataError.Remote>
+
+    suspend fun fetchChatById(chatId: String): EmptyResult<DataError.Remote>
 }

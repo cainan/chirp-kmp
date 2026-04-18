@@ -18,9 +18,12 @@ import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
@@ -45,6 +48,7 @@ import kotlin.time.Clock
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
+@ExperimentalComposeUiApi
 @Composable
 fun ChatDetailRoot(
     chatId: String?,
@@ -53,6 +57,17 @@ fun ChatDetailRoot(
     viewModel: ChatDetailViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+
+    LaunchedEffect(chatId) {
+        viewModel.onAction(ChatDetailAction.OnSelectChat(chatId))
+    }
+
+    BackHandler(
+        enabled = !isDetailPresent
+    ) {
+        viewModel.onAction(ChatDetailAction.OnSelectChat(null))
+        onBack()
+    }
 
     ChatDetailScreen(
         state = state,
