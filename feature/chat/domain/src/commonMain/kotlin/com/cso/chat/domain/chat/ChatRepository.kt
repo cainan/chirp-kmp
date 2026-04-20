@@ -17,4 +17,7 @@ interface ChatRepository {
     suspend fun fetchChatById(chatId: String): EmptyResult<DataError.Remote>
 
     suspend fun createChat(otherUserIds: List<String>): Result<Chat, DataError.Remote>
+
+    suspend fun leaveChat(chatId: String): EmptyResult<DataError.Remote>
+
 }
