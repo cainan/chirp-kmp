@@ -1,12 +1,11 @@
-package com.cso.chat.presentation.create_chat
+package com.cso.chat.presentation.manage_chat
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import chirp.feature.chat.presentation.generated.resources.Res
 import chirp.feature.chat.presentation.generated.resources.chat_members
-import chirp.feature.chat.presentation.generated.resources.create_chat
-import com.cso.chat.domain.model.Chat
+import chirp.feature.chat.presentation.generated.resources.save
 import com.cso.chat.presentation.components.manage_chat.ManageChatAction
 import com.cso.chat.presentation.components.manage_chat.ManageChatScreen
 import com.cso.core.designsystem.components.dialogs.ChirpAdaptiveDialogSheetLayout
@@ -15,17 +14,18 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun CreateChatRoot(
+fun ManageChatRoot(
     onDismiss: () -> Unit,
-    onChatCreated: (Chat) -> Unit,
-    viewModel: CreateChatViewModel = koinViewModel()
+    onMemberAdded: () -> Unit,
+    viewModel: ManageChatViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    ObserveAsEvents(viewModel.events) { event ->
-        when (event) {
-            is CreateChatEvent.OnChatCreated -> onChatCreated(event.chat)
+    ObserveAsEvents(viewModel.events) {event ->
+        when(event) {
+            ManageChatEvent.OnMembersAdded -> onMemberAdded()
         }
+
     }
 
     ChirpAdaptiveDialogSheetLayout(
@@ -33,7 +33,7 @@ fun CreateChatRoot(
     ) {
         ManageChatScreen(
             headerText = stringResource(Res.string.chat_members),
-            primaryButtonText = stringResource(Res.string.create_chat),
+            primaryButtonText = stringResource(Res.string.save),
             state = state,
             onAction = { action ->
                 when (action) {
@@ -45,3 +45,5 @@ fun CreateChatRoot(
         )
     }
 }
+
+
