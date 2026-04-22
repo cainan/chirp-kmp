@@ -2,6 +2,7 @@ package com.cso.chat.data.chat
 
 import com.cso.chat.data.dto.ChatDto
 import com.cso.chat.data.dto.request.CreateChatRequest
+import com.cso.chat.data.dto.request.ParticipantsRequest
 import com.cso.chat.data.mappers.toDomain
 import com.cso.chat.domain.chat.ChatService
 import com.cso.chat.domain.model.Chat
@@ -46,5 +47,17 @@ class KtorChatService(
         return httpClient.delete<Unit>(
             route = "/chat/$chatId/leave"
         ).asEmptyResult()
+    }
+
+    override suspend fun addParticipantsToChat(
+        chatId: String,
+        userIds: List<String>
+    ): Result<Chat, DataError.Remote> {
+        return httpClient.post<ParticipantsRequest, ChatDto>(
+            route = "/chat/$chatId/add",
+            body = ParticipantsRequest(
+                userIds = userIds
+            )
+        ).map { it.toDomain() }
     }
 }
