@@ -1,10 +1,8 @@
 package com.cso.chat.data.chat
 
-import com.cso.chat.data.lifecycle.AppLifecycleObserver
 import com.cso.chat.data.mappers.toDomain
 import com.cso.chat.data.mappers.toEntity
 import com.cso.chat.data.mappers.toLastMessageView
-import com.cso.chat.data.network.ConnectivityObserver
 import com.cso.chat.database.ChirpChatDatabase
 import com.cso.chat.database.entities.ChatInfoEntity
 import com.cso.chat.database.entities.ChatParticipantEntity
@@ -19,33 +17,18 @@ import com.cso.core.domain.util.EmptyResult
 import com.cso.core.domain.util.Result
 import com.cso.core.domain.util.asEmptyResult
 import com.cso.core.domain.util.onSuccess
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.supervisorScope
 
 class OfflineFirstChatRepository(
     private val chatService: ChatService,
     private val db: ChirpChatDatabase,
-    private val observer: AppLifecycleObserver,
-    private val networkObserver: ConnectivityObserver
 ) : ChatRepository {
-
-    init {
-        observer.isInForeground.onEach { isInForeground ->
-            println("isInForeground: $isInForeground")
-        }.launchIn(GlobalScope)
-
-        networkObserver.isConnected.onEach { isConnected ->
-            println("isConnected: $isConnected")
-        }.launchIn(GlobalScope)
-    }
 
     override fun getChats(): Flow<List<Chat>> {
         return db.chatDao.getChatsWithParticipants()
