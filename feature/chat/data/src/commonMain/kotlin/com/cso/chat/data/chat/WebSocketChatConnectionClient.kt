@@ -10,11 +10,11 @@ import com.cso.chat.data.network.KtorWebSocketConnector
 import com.cso.chat.database.ChirpChatDatabase
 import com.cso.chat.domain.chat.ChatConnectionClient
 import com.cso.chat.domain.chat.ChatRepository
-import com.cso.chat.domain.error.ConnectionError
 import com.cso.chat.domain.message.MessageRepository
 import com.cso.chat.domain.model.ChatMessage
 import com.cso.chat.domain.model.ChatMessageDeliveryStatus
 import com.cso.core.domain.auth.SessionStorage
+import com.cso.core.domain.util.DataError
 import com.cso.core.domain.util.EmptyResult
 import com.cso.core.domain.util.onFailure
 import kotlinx.coroutines.CoroutineScope
@@ -55,7 +55,7 @@ class WebSocketChatConnectionClient(
 
     override val connectionState = webSocketConnector.connectionState
 
-    override suspend fun sendChatMessage(message: ChatMessage): EmptyResult<ConnectionError> {
+    override suspend fun sendChatMessage(message: ChatMessage): EmptyResult<DataError.Connection> {
         val outgoingDto = message.toNewMessage()
 
         val webSocketMessage = WebSocketMessageDto(
