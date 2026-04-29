@@ -15,4 +15,6 @@ sealed interface ChatDetailAction {
     data object OnChatMembersClick : ChatDetailAction
     data object OnLeaveChatClick : ChatDetailAction
     data object OnDismissChatOptions : ChatDetailAction
+
+    data object OnRetryPaginationClick: ChatDetailAction
 }

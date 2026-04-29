@@ -9,11 +9,15 @@ import androidx.lifecycle.viewModelScope
 import com.cso.chat.domain.chat.ChatConnectionClient
 import com.cso.chat.domain.chat.ChatRepository
 import com.cso.chat.domain.message.MessageRepository
+import com.cso.chat.domain.model.ChatMessage
 import com.cso.chat.domain.model.ConnectionState
 import com.cso.chat.domain.model.OutgoingNewMessage
 import com.cso.chat.presentation.mappers.toUi
+import com.cso.chat.presentation.mappers.toUiList
 import com.cso.chat.presentation.model.MessageUi
 import com.cso.core.domain.auth.SessionStorage
+import com.cso.core.domain.util.DataErrorException
+import com.cso.core.domain.util.Paginator
 import com.cso.core.domain.util.onFailure
 import com.cso.core.domain.util.onSuccess
 import com.cso.core.presentation.util.toUiText
@@ -48,9 +52,18 @@ class ChatDetailViewModel(
 
     private var hasLoadedInitialData = false
 
+    private var currentPaginator: Paginator<String?, ChatMessage>? = null
+
     private val _chatId = MutableStateFlow<String?>(null)
 
     private val chatInfoFlow = _chatId
+        .onEach { chatId ->
+            if (chatId != null) {
+                setupPaginatorForChat(chatId)
+            } else {
+                currentPaginator = null
+            }
+        }
         .flatMapLatest { chatId ->
             if (chatId != null) {
                 chatRepository.getChatInfoById(chatId)
@@ -75,7 +88,7 @@ class ChatDetailViewModel(
 
         currentState.copy(
             chatUi = chatInfo.chat.toUi(authInfo.user.id),
-            messages = chatInfo.messages.map { it.toUi(authInfo.user.id) }
+            messages = chatInfo.messages.toUiList(authInfo.user.id)
         )
     }
 
@@ -140,11 +153,28 @@ class ChatDetailViewModel(
                 retryMessage(action.message)
             }
 
-            ChatDetailAction.OnScrollToTop -> {}
+            ChatDetailAction.OnScrollToTop -> {
+                onScrollToTop()
+            }
 
             ChatDetailAction.OnSendMessageClick -> {
                 sendMessage()
             }
+
+            ChatDetailAction.OnRetryPaginationClick -> {
+                retryPagination()
+            }
+
+        }
+    }
+
+    private fun retryPagination() = loadNextItems()
+
+    private fun onScrollToTop() = loadNextItems()
+
+    private fun loadNextItems() {
+        viewModelScope.launch {
+            currentPaginator?.loadNextItems()
         }
     }
 
@@ -252,9 +282,7 @@ class ChatDetailViewModel(
             .connectionState
             .onEach { connectionState ->
                 if (connectionState == ConnectionState.CONNECTED) {
-                    _chatId.value?.let {
-                        messageRepository.fetchMessages(it, before = null)
-                    }
+                    currentPaginator?.loadNextItems()
                 }
 
                 _state.update {
@@ -278,6 +306,45 @@ class ChatDetailViewModel(
         _state.update {
             it.copy(
                 isChatOptionsOpen = false
+            )
+        }
+    }
+
+    private fun setupPaginatorForChat(chatId: String) {
+        currentPaginator = Paginator(
+            initialKey = null,
+            onLoadUpdated = { isLoading ->
+                _state.update { it.copy(isPaginationLoading = isLoading) }
+            },
+            onRequest = { beforeTimestamp ->
+                messageRepository.fetchMessages(chatId, beforeTimestamp)
+            },
+            getNextKey = { messages ->
+                messages.minOfOrNull { it.createdAt }?.toString()
+            },
+            onError = { throwable ->
+                if (throwable is DataErrorException) {
+                    _state.update {
+                        it.copy(
+                            paginationError = throwable.error.toUiText()
+                        )
+                    }
+                }
+            },
+            onSuccess = { messages, _ ->
+                _state.update {
+                    it.copy(
+                        endReached = messages.isEmpty(),
+                        paginationError = null
+                    )
+                }
+            }
+        )
+
+        _state.update {
+            it.copy(
+                endReached = false,
+                isPaginationLoading = false,
             )
         }
     }
