@@ -22,6 +22,7 @@ import com.cso.chat.presentation.chat_detail.ChatDetailRoot
 import com.cso.chat.presentation.chat_list.ChatListRoot
 import com.cso.chat.presentation.create_chat.CreateChatRoot
 import com.cso.chat.presentation.manage_chat.ManageChatRoot
+import com.cso.chat.presentation.profile.ProfileRoot
 import com.cso.core.designsystem.theme.extended
 import com.cso.core.presentation.util.DialogSheetScopedViewModel
 import kotlinx.coroutines.launch
@@ -128,6 +129,16 @@ fun ChatListDetailAdaptiveLayout(
             onMemberAdded = {
                 chatListDetailViewModel.onAction(ChatListDetailAction.OnDismissCurrentDialog)
             },
+            onDismiss = {
+                chatListDetailViewModel.onAction(ChatListDetailAction.OnDismissCurrentDialog)
+            }
+        )
+    }
+
+    DialogSheetScopedViewModel(
+        visible = sharedState.dialogState is DialogState.Profile,
+    ) {
+        ProfileRoot(
             onDismiss = {
                 chatListDetailViewModel.onAction(ChatListDetailAction.OnDismissCurrentDialog)
             }
