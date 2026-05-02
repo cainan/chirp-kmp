@@ -8,8 +8,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import chirp.feature.chat.presentation.generated.resources.Res
 import chirp.feature.chat.presentation.generated.resources.error_participant_not_found
-import com.cso.chat.domain.chat.ChatParticipantService
 import com.cso.chat.domain.chat.ChatRepository
+import com.cso.chat.domain.participant.ChatParticipantService
 import com.cso.chat.presentation.components.manage_chat.ManageChatAction
 import com.cso.chat.presentation.components.manage_chat.ManageChatState
 import com.cso.chat.presentation.mappers.toUi
@@ -98,21 +98,23 @@ class ManageChatViewModel(
             val isAlreadyInChat = state.value.existingChatParticipants.any {
                 it.id == participantFromSearch.id
             }
-            val updatedParticipants = if(isAlreadyInChat || isAlreadySelected) {
+            val updatedParticipants = if (isAlreadyInChat || isAlreadySelected) {
                 state.value.selectedChatParticipants
             } else state.value.selectedChatParticipants + participantFromSearch
 
             state.value.queryTextState.clearText()
-            _state.update { it.copy(
-                selectedChatParticipants = updatedParticipants,
-                canAddParticipant = false,
-                currentSearchResult = null
-            ) }
+            _state.update {
+                it.copy(
+                    selectedChatParticipants = updatedParticipants,
+                    canAddParticipant = false,
+                    currentSearchResult = null
+                )
+            }
         }
     }
 
     private fun addParticipantToChat() {
-        if(state.value.selectedChatParticipants.isEmpty()) {
+        if (state.value.selectedChatParticipants.isEmpty()) {
             return
         }
 
@@ -131,10 +133,12 @@ class ManageChatViewModel(
                     eventChannel.send(ManageChatEvent.OnMembersAdded)
                 }
                 .onFailure { error ->
-                    _state.update { it.copy(
-                        isSubmitting = false,
-                        submitError = error.toUiText()
-                    ) }
+                    _state.update {
+                        it.copy(
+                            isSubmitting = false,
+                            submitError = error.toUiText()
+                        )
+                    }
                 }
         }
     }

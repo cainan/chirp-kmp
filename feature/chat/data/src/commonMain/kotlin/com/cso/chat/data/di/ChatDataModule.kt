@@ -1,7 +1,6 @@
 package com.cso.chat.data.di
 
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
-import com.cso.chat.data.chat.KtorChatParticipantService
 import com.cso.chat.data.chat.KtorChatService
 import com.cso.chat.data.chat.OfflineFirstChatRepository
 import com.cso.chat.data.chat.WebSocketChatConnectionClient
@@ -9,13 +8,16 @@ import com.cso.chat.data.message.KtorChatMessageService
 import com.cso.chat.data.message.OfflineFirstMessageRepository
 import com.cso.chat.data.network.ConnectionRetryHandler
 import com.cso.chat.data.network.KtorWebSocketConnector
+import com.cso.chat.data.participant.KtorChatParticipantService
+import com.cso.chat.data.participant.OfflineFirstChatParticipantRepository
 import com.cso.chat.database.DatabaseFactory
 import com.cso.chat.domain.chat.ChatConnectionClient
-import com.cso.chat.domain.chat.ChatParticipantService
 import com.cso.chat.domain.chat.ChatRepository
 import com.cso.chat.domain.chat.ChatService
 import com.cso.chat.domain.message.ChatMessageService
 import com.cso.chat.domain.message.MessageRepository
+import com.cso.chat.domain.participant.ChatParticipantRepository
+import com.cso.chat.domain.participant.ChatParticipantService
 import kotlinx.serialization.json.Json
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.singleOf
@@ -38,6 +40,7 @@ val chatDataModule = module {
     singleOf(::KtorChatService) bind ChatService::class
     singleOf(::OfflineFirstChatRepository) bind ChatRepository::class
     singleOf(::OfflineFirstMessageRepository) bind MessageRepository::class
+    singleOf(::OfflineFirstChatParticipantRepository) bind ChatParticipantRepository::class
     singleOf(::WebSocketChatConnectionClient) bind ChatConnectionClient::class
     singleOf(::ConnectionRetryHandler)
     singleOf(::KtorWebSocketConnector)
