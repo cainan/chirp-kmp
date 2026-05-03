@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import chirp.feature.chat.presentation.generated.resources.Res
 import chirp.feature.chat.presentation.generated.resources.error_current_password_equal_to_new_one
 import chirp.feature.chat.presentation.generated.resources.error_current_password_incorrect
+import chirp.feature.chat.presentation.generated.resources.error_invalid_file_type
 import com.cso.chat.domain.participant.ChatParticipantRepository
 import com.cso.core.domain.auth.AuthService
 import com.cso.core.domain.auth.SessionStorage
@@ -75,7 +76,57 @@ class ProfileViewModel(
             is ProfileAction.OnChangePasswordClick -> changePassword()
             is ProfileAction.OnToggleCurrentPasswordVisibility -> toggleCurrentPasswordVisibility()
             is ProfileAction.OnToggleNewPasswordVisibility -> toggleNewPasswordVisibility()
+            is ProfileAction.OnPictureSelected -> uploadProfilePicture(
+                action.bytes,
+                action.mimeType
+            )
+
             else -> Unit
+        }
+    }
+
+    private fun uploadProfilePicture(bytes: ByteArray, mimeType: String?) {
+        if (state.value.isUploadingImage) {
+            return
+        }
+
+        if (mimeType == null) {
+            _state.update {
+                it.copy(
+                    imageError = UiText.Resource(Res.string.error_invalid_file_type)
+                )
+            }
+            return
+        }
+
+        _state.update {
+            it.copy(
+                isUploadingImage = true,
+                imageError = null
+            )
+        }
+
+        viewModelScope.launch {
+            chatParticipantRepository
+                .uploadProfilePicture(
+                    imageBytes = bytes,
+                    mimeType = mimeType
+                )
+                .onSuccess {
+                    _state.update {
+                        it.copy(
+                            isUploadingImage = false,
+                        )
+                    }
+                }
+                .onFailure { error ->
+                    _state.update {
+                        it.copy(
+                            imageError = error.toUiText(),
+                            isUploadingImage = false
+                        )
+                    }
+                }
         }
     }
 
