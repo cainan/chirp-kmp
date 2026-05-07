@@ -30,8 +30,9 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun ChatListDetailAdaptiveLayout(
+    initialChatId: String?,
     onLogout: () -> Unit,
-    chatListDetailViewModel: ChatListDetailViewModel = koinViewModel()
+    chatListDetailViewModel: ChatListDetailViewModel = koinViewModel(),
 ) {
 
     val sharedState by chatListDetailViewModel.state.collectAsStateWithLifecycle()
@@ -42,6 +43,13 @@ fun ChatListDetailAdaptiveLayout(
     )
 
     val scope = rememberCoroutineScope()
+
+    LaunchedEffect(initialChatId) {
+        initialChatId?.let {
+            chatListDetailViewModel.onAction(ChatListDetailAction.OnSelectChat(initialChatId))
+            scaffoldNavigator.navigateTo(ListDetailPaneScaffoldRole.Detail)
+        }
+    }
 
     BackHandler(enabled = scaffoldNavigator.canNavigateBack()) {
         scope.launch {
