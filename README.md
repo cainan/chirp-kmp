@@ -1,48 +1,87 @@
-This is a Kotlin Multiplatform project targeting Android, iOS, Desktop (JVM).
+# Chirp (KMP)
 
-* [/composeApp](./composeApp/src) is for code that will be shared across your Compose Multiplatform applications.
-  It contains several subfolders:
-  - [commonMain](./composeApp/src/commonMain/kotlin) is for code that’s common for all targets.
-  - Other folders are for Kotlin code that will be compiled for only the platform indicated in the folder name.
-    For example, if you want to use Apple’s CoreCrypto for the iOS part of your Kotlin app,
-    the [iosMain](./composeApp/src/iosMain/kotlin) folder would be the right place for such calls.
-    Similarly, if you want to edit the Desktop (JVM) specific part, the [jvmMain](./composeApp/src/jvmMain/kotlin)
-    folder is the appropriate location.
+## 📌 About the project
+This is **Chirp** — a real-time chat platform built with Kotlin Multiplatform (KMP). It targets **Android**, **iOS**, and **Desktop (JVM)**, sharing UI and business logic across all platforms using Compose Multiplatform.
 
-* [/iosApp](./iosApp/iosApp) contains iOS applications. Even if you’re sharing your UI with Compose Multiplatform,
-  you need this entry point for your iOS app. This is also where you should add SwiftUI code for your project.
+## ✨ Features
+🔹 User registration, authentication, and profile management
 
-### Build and Run Android Application
+🔹 Real-time chat via WebSocket
 
-To build and run the development version of the Android app, use the run configuration from the run widget
-in your IDE’s toolbar or build it directly from the terminal:
-- on macOS/Linux
-  ```shell
-  ./gradlew :composeApp:assembleDebug
-  ```
-- on Windows
-  ```shell
-  .\gradlew.bat :composeApp:assembleDebug
-  ```
+🔹 Group and direct messaging
 
-### Build and Run Desktop (JVM) Application
+🔹 Push notifications via Firebase Cloud Messaging (FCM)
 
-To build and run the development version of the desktop app, use the run configuration from the run widget
-in your IDE’s toolbar or run it directly from the terminal:
-- on macOS/Linux
-  ```shell
-  ./gradlew :composeApp:run
-  ```
-- on Windows
-  ```shell
-  .\gradlew.bat :composeApp:run
-  ```
+🔹 JWT-based authentication and authorization
 
-### Build and Run iOS Application
+🔹 Offline-first with local database (SQLDelight)
 
-To build and run the development version of the iOS app, use the run configuration from the run widget
-in your IDE’s toolbar or open the [/iosApp](./iosApp) directory in Xcode and run it from there.
+🔹 Image loading with Coil
+
+## 🚀 Techs
+- **Kotlin Multiplatform** (Compose Multiplatform)
+- **Kotlin**
+- **Gradle** (multi-module build)
+- **Android** (Compose UI)
+- **iOS** (SwiftUI entry point + Compose shared UI)
+- **Desktop (JVM)** (Compose for Desktop)
+- **SQLDelight** (local database)
+- **Ktor Client** (HTTP & WebSocket)
+- **Koin** (dependency injection)
+- **Kotlinx Serialization**
+- **Kotlinx Coroutines**
+- **Kotlinx Datetime**
+- **Firebase Cloud Messaging** (Push Notifications)
+- **Coil** (image loading)
+- **DataStore** (local preferences)
+- **Kermit** (logging)
+- **JWT** (jjwt)
+
+## 🏗 Project Modules
+| Module                       | Description                                               |
+|------------------------------|-----------------------------------------------------------|
+| `composeApp`                 | Shared Compose UI and application entry point             |
+| `core:presentation`          | Shared UI components, theming, and navigation utilities   |
+| `core:domain`                | Domain models, use cases, and repository interfaces       |
+| `core:data`                  | Data layer implementations (repositories, data sources)   |
+| `core:designsystem`          | Design system components, colors, typography, icons       |
+| `feature:auth:presentation`  | Authentication screens and logic (shared UI)              |
+| `feature:auth:domain`        | Authentication domain layer (use cases, models)           |
+| `feature:chat:presentation`  | Chat UI screens (chat list, conversation, etc.)           |
+| `feature:chat:domain`        | Chat domain layer (messages, rooms, use cases)            |
+| `feature:chat:data`          | Chat data layer (repositories, API clients)               |
+| `feature:chat:database`      | Local database schema and queries                         |
+
+## 🛠 Installation and Configuration
+
+### Prerequisites
+- JDK 21+
+- Android Studio (with KMP plugin)
+- Xcode (for iOS builds, macOS only)
+
+### Running the project
+
+Clone this repository:
+```bash
+git clone https://github.com/cainan/chirp-kmp.git
+cd chirp-kmp
+```
+
+#### Android
+To build and run the Android app:
+```bash
+./gradlew :composeApp:assembleDebug
+```
+
+#### Desktop (JVM)
+To build and run the Desktop app:
+```bash
+./gradlew :composeApp:run
+```
+
+#### iOS
+Open the `iosApp` directory in Xcode and run from there, or use the run configuration from your IDE.
 
 ---
 
-Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)…
+Questions or suggestions? Feel free to open an issue or contribute with pull requests! 😊
