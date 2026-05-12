@@ -1,4 +1,4 @@
-package com.cso.chirp
+package com.cso.chirp.androidapp
 
 import android.app.Application
 import com.cso.chirp.di.initKoin

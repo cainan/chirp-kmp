@@ -1,13 +1,16 @@
-//import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-
 plugins {
     alias(libs.plugins.convention.cmp.application)
     alias(libs.plugins.compose.hot.reload)
-    alias(libs.plugins.google.services)
 }
 
 kotlin {
 
+    androidLibrary {
+        compileSdk = 36
+        minSdk = 26
+        namespace = "com.cso.chirp.composeapp"
+        experimentalProperties["android.experimental.kmp.enableAndroidResources"] = true
+    }
 //    jvm()
 
     sourceSets {
