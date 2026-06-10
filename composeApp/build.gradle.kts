@@ -8,8 +8,6 @@ plugins {
 
 kotlin {
 
-//    jvm()
-
     sourceSets {
         androidMain.dependencies {
             implementation(compose.preview)
@@ -50,21 +48,27 @@ kotlin {
         commonTest.dependencies {
             implementation(libs.kotlin.test)
         }
-        jvmMain.dependencies {
+
+        desktopMain.dependencies {
+            implementation(projects.core.presentation)
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutines.swing)
+            implementation(libs.kotlin.stdlib)
+            implementation(libs.koin.compose)
+            implementation(libs.koin.compose.viewmodel)
+            implementation(libs.jsystemthemedetector)
         }
     }
 }
 
-//compose.desktop {
-//    application {
-//        mainClass = "com.cso.chirp.MainKt"
-//
+compose.desktop {
+    application {
+        mainClass = "com.cso.chirp.MainKt"
+
 //        nativeDistributions {
 //            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
 //            packageName = "com.cso.chirp"
 //            packageVersion = "1.0.0"
 //        }
-//    }
-//}
+    }
+}
