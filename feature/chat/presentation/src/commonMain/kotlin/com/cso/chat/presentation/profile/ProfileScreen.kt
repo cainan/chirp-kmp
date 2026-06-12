@@ -1,6 +1,7 @@
 package com.cso.chat.presentation.profile
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.draganddrop.dragAndDropTarget
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
@@ -20,6 +21,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -41,8 +45,10 @@ import chirp.feature.chat.presentation.generated.resources.profile_image
 import chirp.feature.chat.presentation.generated.resources.save
 import chirp.feature.chat.presentation.generated.resources.upload_icon
 import chirp.feature.chat.presentation.generated.resources.upload_image
+import com.cso.chat.presentation.profile.components.DragAndDropOverlay
 import com.cso.chat.presentation.profile.components.ProfileHeaderSection
 import com.cso.chat.presentation.profile.components.ProfileSectionLayout
+import com.cso.chat.presentation.profile.mediapicker.rememberDragAndDropTarget
 import com.cso.chat.presentation.profile.mediapicker.rememberImagePickerLauncher
 import com.cso.core.designsystem.components.avatar.AvatarSize
 import com.cso.core.designsystem.components.avatar.ChirpAvatarPhoto
@@ -71,12 +77,14 @@ fun ProfileRoot(
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     val launcher = rememberImagePickerLauncher { pickedImageData ->
-        viewModel.onAction(ProfileAction.OnPictureSelected(
-            bytes = pickedImageData.bytes,
-            mimeType = pickedImageData.mimeType
-        ))
+        viewModel.onAction(
+            ProfileAction.OnPictureSelected(
+                bytes = pickedImageData.bytes,
+                mimeType = pickedImageData.mimeType
+            )
+        )
     }
-    
+
     ChirpAdaptiveDialogSheetLayout(
         onDismiss = onDismiss
     ) {
@@ -88,6 +96,7 @@ fun ProfileRoot(
                     is ProfileAction.OnUploadPictureClick -> {
                         launcher.launch()
                     }
+
                     else -> Unit
                 }
                 viewModel.onAction(action)
@@ -101,6 +110,25 @@ fun ProfileScreen(
     state: ProfileState,
     onAction: (ProfileAction) -> Unit,
 ) {
+
+    var isHoveringWithFile by remember {
+        mutableStateOf(false)
+    }
+
+    val dragAndDropTarget = rememberDragAndDropTarget(
+        onHover = { isHovered ->
+            isHoveringWithFile = isHovered
+        },
+        onDrop = { imageData ->
+            onAction(
+                ProfileAction.OnPictureSelected(
+                    bytes = imageData.bytes,
+                    mimeType = imageData.mimeType
+                )
+            )
+        }
+    )
+
     Column(
         modifier = Modifier
             .clearFocusOnTap()
@@ -110,6 +138,10 @@ fun ProfileScreen(
                 shape = RoundedCornerShape(16.dp)
             )
             .verticalScroll(rememberScrollState())
+            .dragAndDropTarget(
+                shouldStartDragAndDrop = { true },
+                target = dragAndDropTarget
+            )
     ) {
         ProfileHeaderSection(
             username = state.username,
@@ -259,6 +291,10 @@ fun ProfileScreen(
         ) {
             Spacer(modifier = Modifier.weight(1f))
         }
+    }
+
+    if (isHoveringWithFile) {
+        DragAndDropOverlay()
     }
 
     if (state.showDeleteConfirmationDialog) {
