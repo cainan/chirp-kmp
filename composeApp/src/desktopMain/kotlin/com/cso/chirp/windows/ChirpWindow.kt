@@ -12,11 +12,13 @@ import chirp.composeapp.generated.resources.file
 import chirp.composeapp.generated.resources.logo
 import chirp.composeapp.generated.resources.new_window
 import com.cso.chirp.App
+import com.cso.chirp.theme.AppTheme
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun ChirpWindow(
+    appTheme: AppTheme,
     onCloseRequest: () -> Unit,
     onAddWindowClick: () -> Unit,
     onFocusChanged: (Boolean) -> Unit
@@ -53,7 +55,9 @@ fun ChirpWindow(
         }
 
 
-        App()
+        App(
+            isDarkTheme = appTheme == AppTheme.DARK
+        )
     }
 
 }

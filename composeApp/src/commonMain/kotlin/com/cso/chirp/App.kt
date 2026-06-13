@@ -1,5 +1,6 @@
 package com.cso.chirp
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -17,6 +18,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 @Preview
 fun App(
+    isDarkTheme: Boolean = isSystemInDarkTheme(),
     viewModel: MainViewModel = koinViewModel(),
     onAuthenticationChecked: () -> Unit = {}
 ) {
@@ -42,7 +44,9 @@ fun App(
         }
     }
 
-    ChirpTheme {
+    ChirpTheme(
+        darkTheme = isDarkTheme
+    ) {
         if (!state.isCheckingAuth) {
             NavigationRoot(
                 navController = navController,
