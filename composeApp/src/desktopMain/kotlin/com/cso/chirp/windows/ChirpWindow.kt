@@ -21,7 +21,8 @@ fun ChirpWindow(
     appTheme: AppTheme,
     onCloseRequest: () -> Unit,
     onAddWindowClick: () -> Unit,
-    onFocusChanged: (Boolean) -> Unit
+    onFocusChanged: (Boolean) -> Unit,
+    onDeepLinkListenerSetup: () -> Unit,
 ) {
 
     val windowState = rememberWindowState(
@@ -60,7 +61,8 @@ fun ChirpWindow(
 
 
         App(
-            isDarkTheme = appTheme == AppTheme.DARK
+            isDarkTheme = appTheme == AppTheme.DARK,
+            onDeepLinkListenerSetup = onDeepLinkListenerSetup
         )
     }
 
