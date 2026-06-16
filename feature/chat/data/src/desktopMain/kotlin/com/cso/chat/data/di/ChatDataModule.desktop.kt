@@ -3,6 +3,7 @@ package com.cso.chat.data.di
 import com.cso.chat.data.lifecycle.AppLifecycleObserver
 import com.cso.chat.data.network.ConnectionErrorHandler
 import com.cso.chat.data.network.ConnectivityObserver
+import com.cso.chat.data.notification.DesktopNotifier
 import com.cso.chat.data.notification.FirebasePushNotificationService
 import com.cso.chat.database.DatabaseFactory
 import com.cso.chat.domain.notification.PushNotificationService
@@ -15,5 +16,6 @@ actual val platformChatDataModule = module {
     singleOf(::ConnectionErrorHandler)
     singleOf(::ConnectivityObserver)
     singleOf(::AppLifecycleObserver)
+    singleOf(::DesktopNotifier)
     singleOf(::FirebasePushNotificationService) bind PushNotificationService::class
 }
