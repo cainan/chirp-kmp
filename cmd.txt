@@ -1,1 +1,16 @@
 adb shell am start -W -a android.intent.action.VIEW -d "<url>" com.cso.chirp
+
+Generate jar before conveyor
+    ./gradlew :composeApp:desktopJar
+
+MacOS:
+    conveyor make app
+
+Windows:
+    conveyor make windows-msix
+
+    powershell to install: Add-AppxPackage -Path ".\chirp-1.0.0.msix" - AllowUnsigned
+
+Linux:
+    conveyor make debian-package
+        - sudo dpkg -t name.deb
