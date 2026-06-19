@@ -7,6 +7,8 @@ plugins {
     alias(libs.plugins.conveyor)
 }
 
+version = "1.0.0"
+
 kotlin {
 
     sourceSets {
